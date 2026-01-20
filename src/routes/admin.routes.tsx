@@ -4,19 +4,13 @@ import CreateAdmin from "../pages/Admin/CreateAdmin/CreateAdmin";
 import CreateStudent from "../pages/Admin/CreateStudent/CreateStudent";
 import CreateFaculty from "../pages/Admin/CreateFaculty/CreateFaculty";
 
-type TRoute = {
-  path: string;
-  element: React.ReactNode;
-  children?: TRoute[];
-};
-
 type TSidebarItem = {
   key: string;
   label: React.ReactNode;
   children?: TSidebarItem[];
 };
 
-const adminPaths = [
+export const adminPaths = [
   {
     name: "Dashboard",
     path: "dashboard",
@@ -64,22 +58,5 @@ export const adminSidebarItems = adminPaths.reduce(
     }
     return acc;
   },
-  []
+  [],
 );
-
-export const adminRoutes = adminPaths.reduce((acc: TRoute[], item) => {
-  if (item.path && item.element) {
-    acc.push({
-      path: item.path,
-      element: item.element,
-    });
-  }
-  if (item.children) {
-    item.children.forEach((child) => {
-      if (child.path && child.element) {
-        acc.push({ path: child.path, element: child.element });
-      }
-    });
-  }
-  return acc;
-}, []);
