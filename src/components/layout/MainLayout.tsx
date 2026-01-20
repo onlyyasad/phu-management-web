@@ -1,10 +1,10 @@
-import { Layout, Menu, Button, Dropdown } from "antd";
+import { Layout, Button, Dropdown } from "antd";
 import { Outlet } from "react-router";
-import { adminSidebarItems } from "../../routes/admin.routes";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import Sidebar from "./Sidebar";
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content } = Layout;
 
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -30,37 +30,7 @@ const MainLayout = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        breakpoint="lg"
-        collapsedWidth="0"
-        theme="dark"
-        style={{ background: "#1a2332" }}
-      >
-        <div
-          style={{
-            background: "linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)",
-            padding: "16px",
-            textAlign: "center",
-            color: "white",
-            fontWeight: 600,
-            overflow: "hidden",
-          }}
-        >
-          <span style={{ fontSize: "20px", marginRight: "8px" }}>📊</span>
-          {!collapsed && "PHU Management"}
-        </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          items={adminSidebarItems}
-          className="sidebar-menu"
-          style={{ background: "#1a2332" }}
-        />
-      </Sider>
-
+      <Sidebar collapsed={collapsed} />
       <Layout>
         <Header
           style={{
