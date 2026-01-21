@@ -2,8 +2,10 @@ import { Form, Input, Button, Card } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { useAppDispatch } from "../../redux/hooks";
-import { setUser } from "../../redux/features/auth/authSlice";
+import { setUser, type TUser } from "../../redux/features/auth/authSlice";
 import { verifyToken } from "../../utils/verifyToken";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 interface LoginFormData {
   id: string;
@@ -12,6 +14,7 @@ interface LoginFormData {
 
 const Login = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -22,13 +25,20 @@ const Login = () => {
   const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit = async (data: LoginFormData) => {
+    const toastId = toast.info("Logging in...");
     try {
       const res = await login(data).unwrap();
 
-      const user = verifyToken(res.data.accessToken);
+      const user = verifyToken(res.data.accessToken) as TUser;
       dispatch(setUser({ user, token: res.data.accessToken }));
+      toast.success("Login successful!", { id: toastId, duration: 3000 });
+      navigate(`/${user.role.toLowerCase()}/dashboard`);
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Login error:", error);
+      toast.error("Login failed. Please check your credentials.", {
+        id: toastId,
+        duration: 3000,
+      });
     }
   };
 

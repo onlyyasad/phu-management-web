@@ -1,9 +1,10 @@
 import { Layout, Menu } from "antd";
 import React from "react";
-import { sidebarItemsGenerator } from "../../utils/sidebarItemsGenerator";
-import { adminPaths } from "../../routes/admin.routes";
-import { facultyPaths } from "../../routes/faculty.routes";
-import { studentPaths } from "../../routes/student.routes";
+import { sidebarItemsGenerator } from "../../../utils/sidebarItemsGenerator";
+import { adminPaths } from "../../../routes/admin.routes";
+import { facultyPaths } from "../../../routes/faculty.routes";
+import { studentPaths } from "../../../routes/student.routes";
+import type { TSidebarItem } from "../../../types/sidebar.type";
 
 const { Sider } = Layout;
 
@@ -18,7 +19,7 @@ const userRole = {
 };
 const Sidebar: React.FC<TProps> = ({ collapsed }) => {
   const role = "faculty";
-  let sidebaritems;
+  let sidebaritems: TSidebarItem[] = [];
   switch (role) {
     case userRole.ADMIN:
       sidebaritems = sidebarItemsGenerator(adminPaths, userRole.ADMIN);
