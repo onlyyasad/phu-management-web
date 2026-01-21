@@ -1,6 +1,9 @@
 import { Form, Input, Button, Card } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
+import { useAppDispatch } from "../../redux/hooks";
+import { setUser } from "../../redux/features/auth/authSlice";
+import { verifyToken } from "../../utils/verifyToken";
 
 interface LoginFormData {
   id: string;
@@ -8,6 +11,7 @@ interface LoginFormData {
 }
 
 const Login = () => {
+  const dispatch = useAppDispatch();
   const {
     control,
     handleSubmit,
@@ -15,18 +19,16 @@ const Login = () => {
   } = useForm<LoginFormData>({
     defaultValues: { id: "", password: "" },
   });
-  const [login, { data, error, isLoading }] = useLoginMutation();
-
-  console.log(data, error);
+  const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await login(data).unwrap();
-      console.log("Login successful");
-      // Handle successful login, e.g., redirect to dashboard
+      const res = await login(data).unwrap();
+
+      const user = verifyToken(res.data.accessToken);
+      dispatch(setUser({ user, token: res.data.accessToken }));
     } catch (error) {
       console.error("Login failed:", error);
-      // Handle error, e.g., show error message
     }
   };
 
