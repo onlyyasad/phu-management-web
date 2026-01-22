@@ -2,7 +2,7 @@ import { Layout, Button, Dropdown } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import type { ItemType } from "antd/es/menu/interface";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { logout, useCurrentToken } from "../../../redux/features/auth/authSlice";
+import { logout, selectCurrentToken } from "../../../redux/features/auth/authSlice";
 const { Header } = Layout;
 
 type TProps = {
@@ -12,7 +12,7 @@ type TProps = {
 
 const Navbar: React.FC<TProps> = ({ collapsed, setCollapsed }) => {
   const dispatch = useAppDispatch();
-  const token = useAppSelector(useCurrentToken);
+  const token = useAppSelector(selectCurrentToken);
 
   const userMenuItems: ItemType[] = [
     {
