@@ -1,30 +1,21 @@
-import { Form, Input, Button, Card } from "antd";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Card } from "antd";
+import { type FieldValues } from "react-hook-form";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { useAppDispatch } from "../../redux/hooks";
 import { setUser, type TUser } from "../../redux/features/auth/authSlice";
 import { verifyToken } from "../../utils/verifyToken";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-
-interface LoginFormData {
-  id: string;
-  password: string;
-}
+import PHForm from "../../components/form/PHForm";
+import PHInput from "../../components/form/PHInput";
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
-    defaultValues: { id: "", password: "" },
-  });
+
   const [login, { isLoading }] = useLoginMutation();
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: FieldValues) => {
     const toastId = toast.info("Logging in...");
     try {
       const res = await login(data).unwrap();
@@ -54,7 +45,14 @@ const Login = () => {
     >
       <Card style={{ width: 400 }}>
         <h2 style={{ textAlign: "center" }}>Login</h2>
-        <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
+        <PHForm onSubmit={onSubmit}>
+          <PHInput type="text" name="id" label="id" />
+          <PHInput type="password" name="password" label="password" />
+          <Button type="primary" htmlType="submit" loading={isLoading} block>
+            Login
+          </Button>
+        </PHForm>
+        {/* <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
           <Form.Item
             label="ID"
             validateStatus={errors.id ? "error" : ""}
@@ -84,7 +82,7 @@ const Login = () => {
               Login
             </Button>
           </Form.Item>
-        </Form>
+        </Form> */}
       </Card>
     </div>
   );
