@@ -9,6 +9,7 @@ import { academicSemesterSchema } from "../../../schemas/academicManagement.sche
 import { useAddAcademicSemesterMutation } from "../../../redux/features/admin/academicManagement.api";
 import { toast } from "sonner";
 import type { TError, TResponse } from "../../../types/global.types";
+import type { TAcademicSemester } from "../../../types/academicSemester.types";
 
 const CreateAcademicSemester = () => {
   const [addAcademicSemester, { isLoading }] = useAddAcademicSemesterMutation();
@@ -24,7 +25,7 @@ const CreateAcademicSemester = () => {
     try {
       const res = (await addAcademicSemester(
         semesterData,
-      ).unwrap()) as TResponse;
+      ).unwrap()) as TResponse<TAcademicSemester>;
 
       if (res.success) {
         toast.success("Academic semester created successfully", {
@@ -33,7 +34,7 @@ const CreateAcademicSemester = () => {
       }
     } catch (error) {
       const err = error as TError;
-      toast.error(err?.data?.message || "Error creating semester:", {
+      toast.error(err.message || "Error creating semester:", {
         id: toastId,
       });
     }

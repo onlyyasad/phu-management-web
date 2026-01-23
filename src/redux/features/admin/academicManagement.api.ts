@@ -1,20 +1,42 @@
-import type { TAcademicSemesterResponse } from "../../../types/academicSemester.types";
+import type { TAcademicSemester } from "../../../types/academicSemester.types";
+import type {
+  TError,
+  TErrorResponseRedux,
+  TResponseRedux,
+} from "../../../types/global.types";
 import { baseApi } from "../../api/baseApi";
 
 const academicManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllSemesters: builder.query({
-      query: () => ({
-        url: "/academic-semesters",
-        method: "GET",
-      }),
-      transformResponse: (response) => {
-        const responseData: TAcademicSemesterResponse = {
-            data: response.data,
-            meta: response.meta,
+      query: (args) => {
+        const params = new URLSearchParams();
+        if (args?.length) {
+          args.forEach((item: Record<string, string>) => {
+            params.append(item.name, item.value);
+          });
         }
+
+        return {
+          url: "/academic-semesters",
+          method: "GET",
+          params,
+        };
+      },
+      transformResponse: (response: TResponseRedux<TAcademicSemester[]>) => {
+        const responseData = {
+          data: response.data,
+          meta: response.meta,
+        };
         return responseData;
-      }
+      },
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
     }),
     addAcademicSemester: builder.mutation({
       query: (payload) => ({
@@ -22,6 +44,13 @@ const academicManagementApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
     }),
   }),
 });

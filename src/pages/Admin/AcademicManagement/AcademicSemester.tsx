@@ -1,26 +1,22 @@
-import { Table, Spin, Alert, Space } from "antd";
-import type { ColumnsType } from "antd/es/table";
+import { Table, Alert, Space, Button } from "antd";
+import type { TableProps, TableColumnsType } from "antd";
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
 import type { TAcademicSemester } from "../../../types/academicSemester.types";
 import type { TError } from "../../../types/global.types";
+import { useState } from "react";
 
 const AcademicSemester = () => {
-  const { data, isLoading, error } = useGetAllSemestersQuery(undefined);
-
-  if (isLoading) {
-    return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
-        <Spin size="large" />
-      </div>
-    );
-  }
+  const [params, setParams] = useState<Record<string, unknown>[]>([]);
+  const { data, isLoading, error, isFetching } =
+    useGetAllSemestersQuery(params);
 
   if (error) {
+    console.log(error, "from page");
     const errorData = error as TError;
     return (
       <Alert
         title="Error"
-        description={errorData?.data?.message || "Something went wrong"}
+        description={errorData.message || "Something went wrong"}
         type="error"
         showIcon
       />
@@ -29,52 +25,82 @@ const AcademicSemester = () => {
 
   const tableData = data?.data || [];
 
-  const columns: ColumnsType<TAcademicSemester> = [
+  const columns: TableColumnsType<TAcademicSemester> = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
       filters: [
         { text: "Autumn", value: "Autumn" },
         { text: "Summer", value: "Summer" },
         { text: "Fall", value: "Fall" },
       ],
-      onFilter: (value, record) => record.name === value,
     },
     {
       title: "Year",
       dataIndex: "year",
       key: "year",
-      sorter: (a, b) => parseInt(a.year) - parseInt(b.year),
+      filters: [
+        { text: "2026", value: "2026" },
+        { text: "2027", value: "2027" },
+        { text: "2028", value: "2028" },
+      ],
     },
     {
       title: "Start Month",
       dataIndex: "startMonth",
       key: "startMonth",
-      sorter: (a, b) => a.startMonth.localeCompare(b.startMonth),
     },
     {
       title: "End Month",
       dataIndex: "endMonth",
       key: "endMonth",
-      sorter: (a, b) => a.endMonth.localeCompare(b.endMonth),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: () => {
+        return (
+          <div>
+            <Button>Update</Button>
+          </div>
+        );
+      },
     },
   ];
+
+  const onChange: TableProps<TAcademicSemester>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra,
+  ) => {
+    console.log({ filters }, extra);
+    if (extra.action === "filter") {
+      const queryParams: Record<string, unknown>[] = [];
+      filters?.name?.forEach((item) => {
+        queryParams.push({ name: "name", value: item });
+      });
+      setParams(queryParams);
+    }
+  };
 
   return (
     <Space orientation="vertical" style={{ width: "100%" }} size="large">
       <h2>Academic Semesters</h2>
-      <Table
+      <Table<TAcademicSemester>
         columns={columns}
         dataSource={tableData}
         rowKey="_id"
+        onChange={onChange}
         pagination={{
           pageSize: 10,
           showSizeChanger: true,
           showQuickJumper: true,
-          showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`,
         }}
+        loading={isLoading || isFetching}
       />
     </Space>
   );
