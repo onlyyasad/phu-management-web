@@ -9,12 +9,21 @@ type TProps = {
 
 const PHInput: React.FC<TProps> = ({ type, name, label }) => {
   return (
-    <div>
-      {label && <label htmlFor={name}>{label.toUpperCase()}</label>}
+    <div style={{ marginBottom: 16 }}>
+      {label && (
+        <label
+          htmlFor={name}
+          style={{ display: "block", marginBottom: 8, fontWeight: 500 }}
+        >
+          {label.charAt(0).toUpperCase() + label.slice(1)}
+        </label>
+      )}
       <Controller
         name={name}
-        rules={{ required: "Please input your ID!" }}
-        render={({ field }) => <Input {...field} type={type} id={name} />}
+        rules={{ required: label ? `Please input your ${label.charAt(0).toUpperCase() + label.slice(1)}!` : "This field is required!" }}
+        render={({ field }) => (
+          <Input {...field} type={type} id={name} style={{ width: "100%" }} />
+        )}
       />
     </div>
   );

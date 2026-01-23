@@ -52,37 +52,6 @@ const Login = () => {
             Login
           </Button>
         </PHForm>
-        {/* <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
-          <Form.Item
-            label="ID"
-            validateStatus={errors.id ? "error" : ""}
-            help={errors.id?.message}
-          >
-            <Controller
-              name="id"
-              control={control}
-              rules={{ required: "Please input your ID!" }}
-              render={({ field }) => <Input {...field} />}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Password"
-            validateStatus={errors.password ? "error" : ""}
-            help={errors.password?.message}
-          >
-            <Controller
-              name="password"
-              control={control}
-              rules={{ required: "Please input your password!" }}
-              render={({ field }) => <Input.Password {...field} />}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={isLoading} block>
-              Login
-            </Button>
-          </Form.Item>
-        </Form> */}
       </Card>
     </div>
   );
