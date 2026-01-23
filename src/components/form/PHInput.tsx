@@ -1,4 +1,4 @@
-import { Input } from "antd";
+import { Form, Input } from "antd";
 import { Controller } from "react-hook-form";
 
 type TProps = {
@@ -10,19 +10,17 @@ type TProps = {
 const PHInput: React.FC<TProps> = ({ type, name, label }) => {
   return (
     <div style={{ marginBottom: 16 }}>
-      {label && (
-        <label
-          htmlFor={name}
-          style={{ display: "block", marginBottom: 8, fontWeight: 500 }}
-        >
-          {label.charAt(0).toUpperCase() + label.slice(1)}
-        </label>
-      )}
       <Controller
         name={name}
-        rules={{ required: label ? `Please input your ${label.charAt(0).toUpperCase() + label.slice(1)}!` : "This field is required!" }}
+        rules={{
+          required: label
+            ? `Please input your ${label.charAt(0).toUpperCase() + label.slice(1)}!`
+            : "This field is required!",
+        }}
         render={({ field }) => (
-          <Input {...field} type={type} id={name} style={{ width: "100%" }} />
+          <Form.Item label={label} name={name}>
+            <Input {...field} type={type} id={name} style={{ width: "100%" }} size="large" />
+          </Form.Item>
         )}
       />
     </div>
