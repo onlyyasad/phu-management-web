@@ -44,6 +44,7 @@ const Sidebar: React.FC<TProps> = ({ collapsed }) => {
       breakpoint="lg"
       collapsedWidth="0"
       theme="dark"
+      width={280}
       style={{ background: "#1a2332" }}
     >
       <div
