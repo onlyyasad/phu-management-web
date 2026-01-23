@@ -12,3 +12,10 @@ export type TResponse = {
     message: string;
     data?: Record<string, any> | Record<string, any>[];
 }
+
+export type TMeta = {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
