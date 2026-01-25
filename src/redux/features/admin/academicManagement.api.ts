@@ -83,6 +83,20 @@ const academicManagementApi = baseApi.injectEndpoints({
         return errorRes;
       },
     }),
+    addAcademicFaculty: builder.mutation({
+      query: (payload) => ({
+        url: "/academic-faculties/create-academic-faculty",
+        method: "POST",
+        body: payload,
+      }),
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
   }),
 });
 
@@ -90,4 +104,5 @@ export const {
   useGetAllSemestersQuery,
   useAddAcademicSemesterMutation,
   useGetAllAcademicFacultyQuery,
+  useAddAcademicFacultyMutation,
 } = academicManagementApi;
