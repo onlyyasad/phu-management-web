@@ -1,3 +1,4 @@
+import type { TAcademicFaculty } from "../../../types/academicFaculty.types";
 import type { TAcademicSemester } from "../../../types/academicSemester.types";
 import type {
   TError,
@@ -52,8 +53,41 @@ const academicManagementApi = baseApi.injectEndpoints({
         return errorRes;
       },
     }),
+    getAllAcademicFaculty: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+        if (args?.length) {
+          args.forEach((item: Record<string, string>) => {
+            params.append(item.name, item.value);
+          });
+        }
+
+        return {
+          url: "/academic-faculties",
+          method: "GET",
+          params,
+        };
+      },
+      transformResponse: (response: TResponseRedux<TAcademicFaculty[]>) => {
+        const responseData = {
+          data: response.data,
+          meta: response.meta,
+        };
+        return responseData;
+      },
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
   }),
 });
 
-export const { useGetAllSemestersQuery, useAddAcademicSemesterMutation } =
-  academicManagementApi;
+export const {
+  useGetAllSemestersQuery,
+  useAddAcademicSemesterMutation,
+  useGetAllAcademicFacultyQuery,
+} = academicManagementApi;

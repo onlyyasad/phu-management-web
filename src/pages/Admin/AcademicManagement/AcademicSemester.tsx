@@ -11,7 +11,6 @@ const AcademicSemester = () => {
     useGetAllSemestersQuery(params);
 
   if (error) {
-    console.log(error, "from page");
     const errorData = error as TError;
     return (
       <Alert
