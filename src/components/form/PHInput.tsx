@@ -12,14 +12,20 @@ const PHInput: React.FC<TProps> = ({ type, name, label }) => {
     <div style={{ marginBottom: 16 }}>
       <Controller
         name={name}
-        rules={{
-          required: label
-            ? `Please input your ${label.charAt(0).toUpperCase() + label.slice(1)}!`
-            : "This field is required!",
-        }}
-        render={({ field }) => (
-          <Form.Item label={label} name={name}>
-            <Input {...field} type={type} id={name} style={{ width: "100%" }} size="large" />
+        render={({ field, fieldState: { error } }) => (
+          <Form.Item
+            label={label}
+            name={name}
+            validateStatus={error ? "error" : ""}
+            help={error ? error.message : null}
+          >
+            <Input
+              {...field}
+              type={type}
+              id={name}
+              style={{ width: "100%" }}
+              size="large"
+            />
           </Form.Item>
         )}
       />
