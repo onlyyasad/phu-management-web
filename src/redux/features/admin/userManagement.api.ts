@@ -55,4 +55,5 @@ const userManagementApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllStudentsQuery } = userManagementApi;
+export const { useGetAllStudentsQuery, useAddStudentMutation } =
+  userManagementApi;

@@ -9,47 +9,16 @@ import {
   useGetAllAcademicDepartmentQuery,
   useGetAllSemestersQuery,
 } from "../../../redux/features/admin/academicManagement.api";
-
-const studentDummyData = {
-  password: "student123",
-  student: {
-    name: {
-      firstName: "Habib",
-      middleName: "Al",
-      lastName: "Hasan",
-    },
-    gender: "male",
-    dateOfBirth: "2007-11-10",
-    email: "student2@email.com",
-    contactNo: "+8801734567891",
-    emergencyContactNo: "+8801934567891",
-    bloodGroup: "B-",
-    presentAddress: "555 Maple Lane, City, Country",
-    permanentAddress: "777 Oak Street, City, Country",
-    guardian: {
-      fatherName: "James Johnson",
-      fatherOccupation: "Accountant",
-      fatherContactNo: "+8801733334444",
-      motherName: "Sophia Johnson",
-      motherOccupation: "Pharmacist",
-      motherContactNo: "+8801833334444",
-    },
-    localGuardian: {
-      name: "Uncle Tom",
-      occupation: "Engineer",
-      contactNo: "+8801633334444",
-      address: "999 Elm Road, City, Country",
-    },
-    academicDepartment: "694590f626eeaefb507dbaf1",
-    admissionSemester: "694591e426eeaefb507dbaf4",
-  },
-};
+import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
+import { toast } from "sonner";
 
 const CreateStudent = () => {
   const { data: semesterData, isLoading: isSemesterLoading } =
     useGetAllSemestersQuery(undefined);
   const { data: departmentData, isLoading: isDepartmentLoading } =
     useGetAllAcademicDepartmentQuery(undefined);
+
+  const [addStudent, { isLoading: isAddingStudent }] = useAddStudentMutation();
 
   const semesterOptions = semesterData?.data.map((semester) => ({
     label: `${semester.name} ${semester.year}`,
@@ -61,12 +30,24 @@ const CreateStudent = () => {
     value: department._id,
   }));
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log("Submitted Data:", data);
-    // const formData = new FormData();
-    // formData.append("data", JSON.stringify(data));
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Creating student...");
 
-    // console.log(Object.fromEntries(formData));
+    const studentData = {
+      password: "student123",
+      student: data,
+    };
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(studentData));
+
+    try {
+      const result = await addStudent(formData).unwrap();
+      if (result?.success) {
+        toast.success("Student created successfully", { id: toastId });
+      }
+    } catch {
+      toast.error("Failed to create student", { id: toastId });
+    }
   };
 
   return (
@@ -223,7 +204,7 @@ const CreateStudent = () => {
               />
             </Col>
           </Row>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={isAddingStudent}>
             Create Student
           </Button>
         </PHForm>
