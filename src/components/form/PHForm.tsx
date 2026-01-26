@@ -16,7 +16,12 @@ type TProps = {
   defaultValues?: Record<string, any>;
 };
 
-const PHForm: React.FC<TProps> = ({ onSubmit, children, resolver, defaultValues }) => {
+const PHForm: React.FC<TProps> = ({
+  onSubmit,
+  children,
+  resolver,
+  defaultValues,
+}) => {
   const formConfig: TFormConfig = {};
   if (resolver) {
     formConfig["resolver"] = resolver;
@@ -25,9 +30,15 @@ const PHForm: React.FC<TProps> = ({ onSubmit, children, resolver, defaultValues 
     formConfig["defaultValues"] = defaultValues;
   }
   const methods = useForm(formConfig);
+  const submit: SubmitHandler<FieldValues> = (data) => {
+    onSubmit(data);
+    methods.reset();
+  };
   return (
     <FormProvider {...methods}>
-      <Form layout="vertical" onFinish={methods.handleSubmit(onSubmit)}>{children}</Form>
+      <Form layout="vertical" onFinish={methods.handleSubmit(submit)}>
+        {children}
+      </Form>
     </FormProvider>
   );
 };

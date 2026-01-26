@@ -5,6 +5,7 @@ type TProps = {
   name: string;
   label?: string;
   options: TOption[];
+  disabled?: boolean;
 };
 
 type TOption = {
@@ -13,7 +14,7 @@ type TOption = {
   disabled?: boolean;
 };
 
-const PHSelect: React.FC<TProps> = ({ label, name, options }) => {
+const PHSelect: React.FC<TProps> = ({ label, name, options, disabled }) => {
   return (
     <Controller
       name={name}
@@ -21,7 +22,6 @@ const PHSelect: React.FC<TProps> = ({ label, name, options }) => {
         <div>
           <Form.Item
             label={label}
-            name={name}
             validateStatus={error ? "error" : ""}
             help={error ? error.message : null}
           >
@@ -30,6 +30,7 @@ const PHSelect: React.FC<TProps> = ({ label, name, options }) => {
               {...field}
               options={options}
               size="large"
+              disabled={disabled}
             />
           </Form.Item>
         </div>
