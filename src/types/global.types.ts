@@ -35,3 +35,8 @@ export type TErrorResponseRedux = {
   };
   status: number;
 };
+
+export type TQueryParam = {
+  name: string;
+  value: unknown;
+};

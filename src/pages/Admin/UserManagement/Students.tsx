@@ -1,12 +1,26 @@
-import { Table, Alert, Space, Button, Typography, Avatar } from "antd";
-import type { TableColumnsType } from "antd";
+import {
+  Table,
+  Alert,
+  Space,
+  Button,
+  Typography,
+  Avatar,
+  Pagination,
+} from "antd";
+import type { TableColumnsType, TableProps } from "antd";
 import { useGetAllStudentsQuery } from "../../../redux/features/admin/userManagement.api";
 import type { TStudent } from "../../../types/student.types";
-import type { TError } from "../../../types/global.types";
+import type { TError, TQueryParam } from "../../../types/global.types";
+import { useState } from "react";
 
 const Students = () => {
-  const { data, isLoading, error, isFetching } =
-    useGetAllStudentsQuery(undefined);
+  const [params, setParams] = useState<TQueryParam[]>([]);
+  const [page, setPage] = useState(1);
+  const { data, isLoading, error, isFetching } = useGetAllStudentsQuery([
+    { name: "limit", value: 10 },
+    { name: "page", value: page },
+    ...params,
+  ]);
 
   if (error) {
     const errorData = error as TError;
@@ -21,16 +35,24 @@ const Students = () => {
   }
 
   const tableData = data?.data || [];
+  const metaData = data?.meta;
 
   const columns: TableColumnsType<TStudent> = [
+    {
+      title: "Student ID",
+      dataIndex: "id",
+      key: "id",
+      sorter: true, // Enable sorting
+      render: (text) => <strong>{text}</strong>,
+    },
     {
       title: "Student Data",
       key: "studentData",
       render: (record) => (
         <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-          <Avatar src={record.profileImg} size={50} />
+          <Avatar src={record.profileImg} size={50} style={{ flexShrink: 0 }} />
           <div>
-            <strong>ID:</strong> {record.id}
+            {/* <strong>ID:</strong> {record.id} */}
             <br />
             <strong>Name:</strong> {record.fullName}
             <br />
@@ -140,6 +162,31 @@ const Students = () => {
     },
   ];
 
+  const onChange: TableProps<TStudent>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra,
+  ) => {
+    const queryParams: TQueryParam[] = [];
+    if (extra.action === "sort" && sorter) {
+      const sortedField = Array.isArray(sorter)
+        ? sorter[0]?.field
+        : sorter?.field;
+      const sortedOrder = Array.isArray(sorter)
+        ? sorter[0]?.order
+        : sorter?.order;
+
+      if (sortedField === "id" && sortedOrder) {
+        queryParams.push({
+          name: "sort",
+          value: sortedOrder === "ascend" ? "id" : "-id",
+        });
+      }
+    }
+    setParams(queryParams);
+  };
+
   return (
     <Space orientation="vertical" style={{ width: "100%" }} size="large">
       <h2>Students</h2>
@@ -147,14 +194,15 @@ const Students = () => {
         columns={columns}
         dataSource={tableData}
         rowKey="_id"
-        pagination={{
-          pageSize: 10,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} items`,
-        }}
+        pagination={false}
         loading={isLoading || isFetching}
+        onChange={onChange}
+      />
+      <Pagination
+        total={metaData?.total || 0}
+        current={page || 1}
+        pageSize={metaData?.limit || 10}
+        onChange={(page) => setPage(page)}
       />
     </Space>
   );
