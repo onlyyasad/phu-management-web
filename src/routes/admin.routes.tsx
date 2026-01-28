@@ -10,7 +10,9 @@ import CreateAcademicDepartment from "../pages/Admin/AcademicManagement/CreateAc
 import AcademicDepartment from "../pages/Admin/AcademicManagement/AcademicDepartment";
 import Admins from "../pages/Admin/UserManagement/Admins";
 import Faculties from "../pages/Admin/UserManagement/Faculties";
-import Students from "../pages/Admin/UserManagement/Students";
+import Students from "../pages/Admin/UserManagement/Students/Students";
+import StudentDetails from "../pages/Admin/UserManagement/Students/StudentDetails";
+import EditStudent from "../pages/Admin/UserManagement/Students/EditStudent";
 
 export const adminPaths = [
   {
@@ -85,6 +87,14 @@ export const adminPaths = [
         name: "Students",
         path: "students",
         element: <Students />,
+      },
+      {
+        path: "students/:id",
+        element: <StudentDetails />,
+      },
+      {
+        path: "students/:id/edit",
+        element: <EditStudent />,
       },
     ],
   },

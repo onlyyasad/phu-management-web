@@ -8,10 +8,11 @@ import {
   Pagination,
 } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
-import { useGetAllStudentsQuery } from "../../../redux/features/admin/userManagement.api";
-import type { TStudent } from "../../../types/student.types";
-import type { TError, TQueryParam } from "../../../types/global.types";
+import { useGetAllStudentsQuery } from "../../../../redux/features/admin/userManagement.api";
+import type { TStudent } from "../../../../types/student.types";
+import type { TError, TQueryParam } from "../../../../types/global.types";
 import { useState } from "react";
+import { NavLink } from "react-router";
 
 const Students = () => {
   const [params, setParams] = useState<TQueryParam[]>([]);
@@ -152,10 +153,17 @@ const Students = () => {
     {
       title: "Action",
       key: "action",
-      render: () => {
+      render: (item) => {
         return (
           <div>
-            <Button>Update</Button>
+            <NavLink to={`/admin/students/${item._id}`}>
+              <Button style={{ marginBottom: "8px", display: "block" }}>
+                Details
+              </Button>
+            </NavLink>
+            <NavLink to={`/admin/students/${item._id}/edit`}>
+              <Button>Update</Button>
+            </NavLink>
           </div>
         );
       },
