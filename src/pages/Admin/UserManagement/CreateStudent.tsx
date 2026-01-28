@@ -1,8 +1,12 @@
-import { Button, Col, Divider, Row } from "antd";
+import { Button, Col, Divider, Form, Input, Row } from "antd";
 import PHForm from "../../../components/form/PHForm";
 import PHInput from "../../../components/form/PHInput";
 import PHSelect from "../../../components/form/PHSelect";
-import type { FieldValues, SubmitHandler } from "react-hook-form";
+import {
+  Controller,
+  type FieldValues,
+  type SubmitHandler,
+} from "react-hook-form";
 import { bloodGroupOptions, genderOptions } from "../../../constants/global";
 import PHDatePicker from "../../../components/form/PHDatePicker";
 import {
@@ -33,12 +37,15 @@ const CreateStudent = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Creating student...");
 
+    console.log(data);
+
     const studentData = {
       password: "student123",
       student: data,
     };
     const formData = new FormData();
     formData.append("data", JSON.stringify(studentData));
+    formData.append("file", data.image);
 
     try {
       const result = await addStudent(formData).unwrap();
@@ -80,6 +87,28 @@ const CreateStudent = () => {
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput type="email" name="email" label="Email" />
+            </Col>
+            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
+              <Controller
+                name="image"
+                render={({ field: { onChange, value, ...field } }) => (
+                  <Form.Item label="Profile Picture">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      size="large"
+                      value={value?.fileName}
+                      {...field}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          onChange(file);
+                        }
+                      }}
+                    />
+                  </Form.Item>
+                )}
+              />
             </Col>
           </Row>
 
