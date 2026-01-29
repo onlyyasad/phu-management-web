@@ -1,12 +1,4 @@
-import {
-  Table,
-  Alert,
-  Space,
-  Button,
-  Typography,
-  Avatar,
-  Pagination,
-} from "antd";
+import { Table, Alert, Space, Button, Avatar, Pagination } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { useGetAllStudentsQuery } from "../../../../redux/features/admin/userManagement.api";
 import type { TStudent } from "../../../../types/student.types";
@@ -43,128 +35,61 @@ const Students = () => {
       title: "Student ID",
       dataIndex: "id",
       key: "id",
-      sorter: true, // Enable sorting
+      width: 120,
       render: (text) => <strong>{text}</strong>,
     },
     {
       title: "Student Data",
       key: "studentData",
       render: (record) => (
-        <div style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-          <Avatar src={record.profileImg} size={50} style={{ flexShrink: 0 }} />
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <Avatar src={record.profileImg} size={45} style={{ flexShrink: 0 }} />
           <div>
-            {/* <strong>ID:</strong> {record.id} */}
-            <br />
-            <strong>Name:</strong> {record.fullName}
-            <br />
-            <strong>Email:</strong>{" "}
-            <Typography.Text copyable>{record.email}</Typography.Text>
-            <br />
-            <strong>Gender:</strong> {record.gender}
-            <br />
-            <strong>Contact:</strong>{" "}
-            <Typography.Text copyable>{record.contactNo}</Typography.Text>
-            <br />
-            <strong>Emergency Contact:</strong>{" "}
-            <Typography.Text copyable>
-              {record.emergencyContactNo}
-            </Typography.Text>
-            <br />
-            <strong>Blood Group:</strong> {record.bloodGroup}
-            <br />
-            <strong>Date of Birth:</strong>{" "}
-            {new Date(record.dateOfBirth).toLocaleDateString()}
+            <div style={{ fontWeight: "600" }}>{record.fullName}</div>
+            <div style={{ fontSize: "12px", color: "#666" }}>
+              {record.email}
+            </div>
+            <div style={{ fontSize: "12px", color: "#666" }}>
+              Gender: {record.gender}
+            </div>
+            <div style={{ fontSize: "12px", color: "#666" }}>
+              Phone: {record.contactNo}
+            </div>
           </div>
         </div>
       ),
     },
     {
-      title: "Academic",
-      key: "academic",
-      render: (record) => (
-        <div>
-          <strong>Department:</strong> {record.academicDepartment.name}
-          <br />
-          <strong>Faculty:</strong> {record.academicFaculty.name}
-          <br />
-          <strong>Semester:</strong> {record.admissionSemester.name}
-        </div>
-      ),
+      title: "Academic Department",
+      key: "department",
+      render: (record) => <span>{record.academicDepartment.name}</span>,
     },
     {
-      title: "Address",
-      key: "address",
-      render: (record) => (
-        <div>
-          <strong>Present:</strong> {record.presentAddress}
-          <br />
-          <strong>Permanent:</strong> {record.permanentAddress}
-        </div>
-      ),
+      title: "Academic Faculty",
+      key: "faculty",
+      render: (record) => <span>{record.academicFaculty.name}</span>,
     },
     {
-      title: "Guardian",
-      key: "guardian",
-      render: (record) => (
-        <Space orientation="vertical">
-          <div>
-            <h4>Father</h4>
-            <strong>Name:</strong> {record.guardian.fatherName}
-            <br />
-            <strong>Occupation:</strong> {record.guardian.fatherOccupation}
-            <br />
-            <strong>Contact:</strong>{" "}
-            <Typography.Text copyable>
-              {record.guardian.fatherContactNo}
-            </Typography.Text>
-          </div>
-          <div>
-            <h4>Mother</h4>
-            <strong>Name:</strong> {record.guardian.motherName}
-            <br />
-            <strong>Occupation:</strong> {record.guardian.motherOccupation}
-            <br />
-            <strong>Contact:</strong>{" "}
-            <Typography.Text copyable>
-              {record.guardian.motherContactNo}
-            </Typography.Text>
-          </div>
-        </Space>
-      ),
-    },
-    {
-      title: "Local Guardian",
-      key: "localGuardian",
-      render: (record) => (
-        <div>
-          <strong>Name:</strong> {record.localGuardian.name}
-          <br />
-          <strong>Occupation:</strong> {record.localGuardian.occupation}
-          <br />
-          <strong>Contact:</strong>{" "}
-          <Typography.Text copyable>
-            {record.localGuardian.contactNo}
-          </Typography.Text>
-          <br />
-          <strong>Address:</strong> {record.localGuardian.address}
-        </div>
-      ),
+      title: "Semester",
+      key: "semester",
+      render: (record) => <span>{record.admissionSemester.name}</span>,
     },
     {
       title: "Action",
       key: "action",
+      width: 150,
       render: (item) => {
         return (
-          <div>
+          <Space size="small">
             <NavLink to={`/admin/students/${item._id}`}>
-              <Button style={{ marginBottom: "8px", display: "block" }}>
+              <Button type="primary" size="small">
                 Details
               </Button>
             </NavLink>
             <NavLink to={`/admin/students/${item._id}/edit`}>
-              <Button>Update</Button>
+              <Button size="small">Update</Button>
             </NavLink>
-          </div>
+          </Space>
         );
       },
     },

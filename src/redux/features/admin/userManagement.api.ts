@@ -38,6 +38,29 @@ const userManagementApi = baseApi.injectEndpoints({
         return errorRes;
       },
     }),
+    getStudentById: builder.query({
+      query: ({ studentId }) => {
+        console.log(studentId, "from query");
+
+        return {
+          url: `/students/${studentId}`,
+          method: "GET",
+        };
+      },
+      transformResponse: (response: TResponseRedux<TStudent>) => {
+        const responseData = {
+          data: response.data,
+        };
+        return responseData;
+      },
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
     addStudent: builder.mutation({
       query: (payload) => ({
         url: "/users/create-student",
@@ -55,5 +78,8 @@ const userManagementApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllStudentsQuery, useAddStudentMutation } =
-  userManagementApi;
+export const {
+  useGetAllStudentsQuery,
+  useAddStudentMutation,
+  useGetStudentByIdQuery,
+} = userManagementApi;
