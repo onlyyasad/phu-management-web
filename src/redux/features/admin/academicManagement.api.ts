@@ -1,3 +1,4 @@
+import { QueryTagTypes } from "../../../constants/global";
 import type { TAcademicDepartment } from "../../../types/academicDepartment.types";
 import type { TAcademicFaculty } from "../../../types/academicFaculty.types";
 import type { TAcademicSemester } from "../../../types/academicSemester.types";
@@ -25,6 +26,7 @@ const academicManagementApi = baseApi.injectEndpoints({
           params,
         };
       },
+      providesTags: [QueryTagTypes.ACADEMIC_SEMESTERS],
       transformResponse: (response: TResponseRedux<TAcademicSemester[]>) => {
         const responseData = {
           data: response.data,
@@ -46,6 +48,7 @@ const academicManagementApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: [QueryTagTypes.ACADEMIC_SEMESTERS],
       transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
         const errorRes: TError = {
           success: errorResponse.data.success,
@@ -69,6 +72,7 @@ const academicManagementApi = baseApi.injectEndpoints({
           params,
         };
       },
+      providesTags: [QueryTagTypes.ACADEMIC_FACULTIES],
       transformResponse: (response: TResponseRedux<TAcademicFaculty[]>) => {
         const responseData = {
           data: response.data,
@@ -90,6 +94,7 @@ const academicManagementApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: [QueryTagTypes.ACADEMIC_FACULTIES],
       transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
         const errorRes: TError = {
           success: errorResponse.data.success,
@@ -113,6 +118,7 @@ const academicManagementApi = baseApi.injectEndpoints({
           params,
         };
       },
+      providesTags: [QueryTagTypes.ACADEMIC_DEPARTMENTS],
       transformResponse: (response: TResponseRedux<TAcademicDepartment[]>) => {
         const responseData = {
           data: response.data,
@@ -134,6 +140,7 @@ const academicManagementApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: [QueryTagTypes.ACADEMIC_DEPARTMENTS],
       transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
         const errorRes: TError = {
           success: errorResponse.data.success,

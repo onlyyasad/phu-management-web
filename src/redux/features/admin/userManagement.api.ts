@@ -1,3 +1,4 @@
+import { QueryTagTypes } from "../../../constants/global";
 import type {
   TError,
   TErrorResponseRedux,
@@ -23,6 +24,7 @@ const userManagementApi = baseApi.injectEndpoints({
           params,
         };
       },
+      providesTags: [QueryTagTypes.STUDENTS],
       transformResponse: (response: TResponseRedux<TStudent[]>) => {
         const responseData = {
           data: response.data,
@@ -40,13 +42,14 @@ const userManagementApi = baseApi.injectEndpoints({
     }),
     getStudentById: builder.query({
       query: ({ studentId }) => {
-        console.log(studentId, "from query");
-
         return {
           url: `/students/${studentId}`,
           method: "GET",
         };
       },
+      providesTags: (_result, _error, { studentId }) => [
+        { type: QueryTagTypes.STUDENTS, id: studentId },
+      ],
       transformResponse: (response: TResponseRedux<TStudent>) => {
         const responseData = {
           data: response.data,
@@ -67,6 +70,27 @@ const userManagementApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: [QueryTagTypes.STUDENTS],
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
+    editStudent: builder.mutation({
+      query: ({ payload, studentId }) => {
+        return {
+          url: `/students/${studentId}`,
+          method: "PATCH",
+          body: payload,
+        };
+      },
+      invalidatesTags: (_result, _error, { studentId }) => [
+        { type: QueryTagTypes.STUDENTS, id: studentId },
+        { type: QueryTagTypes.STUDENTS },
+      ],
       transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
         const errorRes: TError = {
           success: errorResponse.data.success,
@@ -82,4 +106,5 @@ export const {
   useGetAllStudentsQuery,
   useAddStudentMutation,
   useGetStudentByIdQuery,
+  useEditStudentMutation,
 } = userManagementApi;

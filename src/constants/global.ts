@@ -37,3 +37,16 @@ export const bloodGroupOptions = bloodGroups.map((item) => ({
   value: item,
   label: item,
 }));
+
+export const QueryTagTypes = {
+  USERS: "Users",
+  USER: "User",
+  STUDENTS: "Students",
+  STUDENT: "Student",
+  ACADEMIC_FACULTIES: "AcademicFaculties",
+  ACADEMIC_FACULTY: "AcademicFaculty",
+  ACADEMIC_DEPARTMENTS: "AcademicDepartments",
+  ACADEMIC_DEPARTMENT: "AcademicDepartment",
+  ACADEMIC_SEMESTERS: "AcademicSemesters",
+  ACADEMIC_SEMESTER: "AcademicSemester",
+};

@@ -7,6 +7,7 @@ import {
 import { createApi } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../store";
 import { logout, setUser } from "../features/auth/authSlice";
+import { QueryTagTypes } from "../../constants/global";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:5000/api/v1",
@@ -51,5 +52,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
+  tagTypes: Object.values(QueryTagTypes),
   endpoints: () => ({}),
 });
