@@ -1,9 +1,46 @@
 import { QueryTagTypes } from "../../../constants/global";
-import type { TError, TErrorResponseRedux } from "../../../types/global.types";
+import type {
+  TError,
+  TErrorResponseRedux,
+  TResponseRedux,
+} from "../../../types/global.types";
+import type { TSemesterRegistration } from "../../../types/semesterRegistration.types";
 import { baseApi } from "../../api/baseApi";
 
 const courseManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getAllSemesterRegistrations: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+        if (args?.length) {
+          args.forEach((item: Record<string, string>) => {
+            params.append(item.name, item.value);
+          });
+        }
+        return {
+          url: "/semester-registrations",
+          method: "GET",
+          params,
+        };
+      },
+      providesTags: [QueryTagTypes.SEMESTER_REGISTRATIONS],
+      transformResponse: (
+        response: TResponseRedux<TSemesterRegistration[]>,
+      ) => {
+        const responseData = {
+          data: response.data,
+          meta: response.meta,
+        };
+        return responseData;
+      },
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
     addSemesterRegistration: builder.mutation({
       query: (payload) => ({
         url: "/semester-registrations/create-semester-registration",
@@ -22,4 +59,7 @@ const courseManagementApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useAddSemesterRegistrationMutation } = courseManagementApi;
+export const {
+  useGetAllSemesterRegistrationsQuery,
+  useAddSemesterRegistrationMutation,
+} = courseManagementApi;
