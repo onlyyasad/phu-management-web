@@ -31,7 +31,6 @@ const RegisteredSemesters = () => {
         id: toastId,
       });
     } catch (err) {
-      console.log(err, "error status update");
       const errData = err as TError;
       toast.error(
         errData.message || "Failed to update semester registration status",
@@ -61,7 +60,7 @@ const RegisteredSemesters = () => {
       title: "Semester",
       dataIndex: ["academicSemester", "name"],
       key: "semester",
-      render: (text: string, record: TSemesterRegistration) =>
+      render: (_text: string, record: TSemesterRegistration) =>
         `${record.academicSemester.name} ${record.academicSemester.year}`,
     },
     {
