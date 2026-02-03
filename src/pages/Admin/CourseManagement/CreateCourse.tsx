@@ -1,7 +1,7 @@
 import PHForm from "../../../components/form/PHForm";
 import PHSelect from "../../../components/form/PHSelect";
 import PHInput from "../../../components/form/PHInput";
-import { Button } from "antd";
+import { Button, Space } from "antd";
 import {
   useAddCourseMutation,
   useGetAllCoursesQuery,
@@ -51,7 +51,9 @@ const CreateCourse = () => {
   };
 
   return (
-    <PHForm onSubmit={onsSubmit}>
+    <Space orientation="vertical" style={{ width: "100%" }} size="large">
+      <h2>Create Course</h2>
+      <PHForm onSubmit={onsSubmit}>
       <PHInput name="title" label="Title" type="text" />
       <PHInput name="code" label="Code" type="text" />
       <PHInput name="prefix" label="Prefix" type="text" />
@@ -66,7 +68,8 @@ const CreateCourse = () => {
       <Button type="primary" htmlType="submit" size="large" disabled={isAdding}>
         Create
       </Button>
-    </PHForm>
+      </PHForm>
+    </Space>
   );
 };
 

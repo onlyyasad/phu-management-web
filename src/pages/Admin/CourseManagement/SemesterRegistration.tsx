@@ -1,6 +1,6 @@
 import type { FieldValues, SubmitHandler } from "react-hook-form";
 import PHForm from "../../../components/form/PHForm";
-import { Button } from "antd";
+import { Button, Space } from "antd";
 import PHSelect from "../../../components/form/PHSelect";
 import { toast } from "sonner";
 import type { TAcademicSemester } from "../../../types/academicSemester.types";
@@ -49,29 +49,37 @@ const SemesterRegistration = () => {
   };
 
   return (
-    <PHForm
-      onSubmit={onsSubmit}
-      //   resolver={zodResolver(semesterRegistrationSchema)}
-    >
-      <PHSelect
-        name="academicSemester"
-        label="Academic Semester"
-        options={academicSemesterOptions}
-        disabled={isAcademicSemestersLoading}
-      />
-      <PHSelect
-        name="status"
-        label="Status"
-        options={semesterRegistrationStatusOptions}
-      />
-      <PHDatePicker name="startDate" label="Start Date" />
-      <PHDatePicker name="endDate" label="End Date" />
-      <PHInput name="minCredit" label="Min Credit" type="number" />
-      <PHInput name="maxCredit" label="Max Credit" type="number" />
-      <Button type="primary" htmlType="submit" size="large" disabled={isAdding}>
-        Create
-      </Button>
-    </PHForm>
+    <Space orientation="vertical" style={{ width: "100%" }} size="large">
+      <h2>Create Semester Registration</h2>
+      <PHForm
+        onSubmit={onsSubmit}
+        //   resolver={zodResolver(semesterRegistrationSchema)}
+      >
+        <PHSelect
+          name="academicSemester"
+          label="Academic Semester"
+          options={academicSemesterOptions}
+          disabled={isAcademicSemestersLoading}
+        />
+        <PHSelect
+          name="status"
+          label="Status"
+          options={semesterRegistrationStatusOptions}
+        />
+        <PHDatePicker name="startDate" label="Start Date" />
+        <PHDatePicker name="endDate" label="End Date" />
+        <PHInput name="minCredit" label="Min Credit" type="number" />
+        <PHInput name="maxCredit" label="Max Credit" type="number" />
+        <Button
+          type="primary"
+          htmlType="submit"
+          size="large"
+          disabled={isAdding}
+        >
+          Create
+        </Button>
+      </PHForm>
+    </Space>
   );
 };
 
