@@ -1,9 +1,10 @@
 import { Table, Alert, Space, Button, Tag } from "antd";
 import type { TableColumnsType } from "antd";
-import { useGetAllCoursesQuery } from "../../../redux/features/admin/courseManagement.api";
-import type { TCourse } from "../../../types/courses.types";
-import type { TError } from "../../../types/global.types";
+import { useGetAllCoursesQuery } from "../../../../redux/features/admin/courseManagement.api";
+import type { TCourse, TPreRequisiteCourse } from "../../../../types/courses.types";
+import type { TError } from "../../../../types/global.types";
 import { useNavigate } from "react-router";
+import AssignFacultiesModal from "./components/AssignFacultiesModal";
 
 const Courses = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const Courses = () => {
       title: "Pre Requisite Courses",
       dataIndex: "preRequisiteCourses",
       key: "preRequisiteCourses",
-      render: (preReqs: any[]) => {
+      render: (preReqs: TPreRequisiteCourse[]) => {
         if (!preReqs || preReqs.length === 0) return "-";
         return (
           <Space>
@@ -75,9 +76,12 @@ const Courses = () => {
       title: "Action",
       key: "action",
       render: (record: TCourse) => (
-        <Button onClick={() => navigate(`/admin/courses/${record._id}`)}>
-          View Details
-        </Button>
+        <Space>
+          <Button onClick={() => navigate(`/admin/courses/${record._id}`)}>
+            View Details
+          </Button>
+          <AssignFacultiesModal courseId={record._id} />
+        </Space>
       ),
     },
   ];

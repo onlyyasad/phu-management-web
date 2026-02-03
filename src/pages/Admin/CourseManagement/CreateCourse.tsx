@@ -54,20 +54,25 @@ const CreateCourse = () => {
     <Space orientation="vertical" style={{ width: "100%" }} size="large">
       <h2>Create Course</h2>
       <PHForm onSubmit={onsSubmit}>
-      <PHInput name="title" label="Title" type="text" />
-      <PHInput name="code" label="Code" type="text" />
-      <PHInput name="prefix" label="Prefix" type="text" />
-      <PHInput name="credits" label="Credits" type="text" />
-      <PHSelect
-        name="preRequisiteCourses"
-        label="Pre-requisite Courses"
-        mode="multiple"
-        options={preRequisiteOptions}
-        disabled={isCourseLoading}
-      />
-      <Button type="primary" htmlType="submit" size="large" disabled={isAdding}>
-        Create
-      </Button>
+        <PHInput name="title" label="Title" type="text" />
+        <PHInput name="code" label="Code" type="text" />
+        <PHInput name="prefix" label="Prefix" type="text" />
+        <PHInput name="credits" label="Credits" type="text" />
+        <PHSelect
+          name="preRequisiteCourses"
+          label="Pre-requisite Courses"
+          mode="multiple"
+          options={preRequisiteOptions}
+          disabled={isCourseLoading}
+        />
+        <Button
+          type="primary"
+          htmlType="submit"
+          size="large"
+          disabled={isAdding}
+        >
+          Create
+        </Button>
       </PHForm>
     </Space>
   );

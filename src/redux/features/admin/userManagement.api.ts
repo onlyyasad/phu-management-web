@@ -1,4 +1,5 @@
 import { QueryTagTypes } from "../../../constants/global";
+import type { TFaculty } from "../../../types/faculty.types";
 import type {
   TError,
   TErrorResponseRedux,
@@ -99,6 +100,37 @@ const userManagementApi = baseApi.injectEndpoints({
         return errorRes;
       },
     }),
+    getAllFaculties: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+        if (args?.length) {
+          args.forEach((item: Record<string, string>) => {
+            params.append(item.name, item.value);
+          });
+        }
+
+        return {
+          url: "/faculties",
+          method: "GET",
+          params,
+        };
+      },
+      providesTags: [QueryTagTypes.FACULTIES],
+      transformResponse: (response: TResponseRedux<TFaculty[]>) => {
+        const responseData = {
+          data: response.data,
+          meta: response.meta,
+        };
+        return responseData;
+      },
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
   }),
 });
 
@@ -107,4 +139,5 @@ export const {
   useAddStudentMutation,
   useGetStudentByIdQuery,
   useEditStudentMutation,
+  useGetAllFacultiesQuery,
 } = userManagementApi;

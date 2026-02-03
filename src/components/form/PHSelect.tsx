@@ -7,6 +7,7 @@ type TProps = {
   label?: string;
 
   disabled?: boolean;
+  placeholder?: string;
   mode?: "multiple" | "tags";
 };
 
@@ -22,6 +23,7 @@ const PHSelect: React.FC<TProps> = ({
   options,
   disabled,
   mode,
+  placeholder,
 }) => {
   return (
     <Controller
@@ -40,6 +42,7 @@ const PHSelect: React.FC<TProps> = ({
               options={options}
               size="large"
               disabled={disabled}
+              placeholder={placeholder ?? (label ? `Select ${label}` : "Select")}
             />
           </Form.Item>
         </div>

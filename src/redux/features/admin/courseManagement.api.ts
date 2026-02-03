@@ -119,6 +119,23 @@ const courseManagementApi = baseApi.injectEndpoints({
         return errorRes;
       },
     }),
+    assignFaculties: builder.mutation({
+      query: (payload) => {
+        return {
+          url: `/courses/${payload.courseId}/assign-faculties`,
+          method: "PUT",
+          body: payload.data,
+        };
+      },
+      invalidatesTags: [QueryTagTypes.COURSES],
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
   }),
 });
 
@@ -128,4 +145,5 @@ export const {
   useUpdateSemesterRegistrationStatusMutation,
   useGetAllCoursesQuery,
   useAddCourseMutation,
+  useAssignFacultiesMutation,
 } = courseManagementApi;

@@ -51,4 +51,5 @@ export const QueryTagTypes = {
   ACADEMIC_SEMESTER: "AcademicSemester",
   SEMESTER_REGISTRATIONS: "SemesterRegistrations",
   COURSES: "Courses",
+  FACULTIES: "Faculties",
 };
