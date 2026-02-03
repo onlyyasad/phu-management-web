@@ -5,6 +5,7 @@ import type {
   TErrorResponseRedux,
   TResponseRedux,
 } from "../../../types/global.types";
+import type { TOfferedCourse } from "../../../types/offeredCourse.types";
 import type { TSemesterRegistration } from "../../../types/semesterRegistration.types";
 import { baseApi } from "../../api/baseApi";
 
@@ -136,6 +137,46 @@ const courseManagementApi = baseApi.injectEndpoints({
         return errorRes;
       },
     }),
+    getOfferedCourses: builder.query({
+      query: () => {
+        return {
+          url: "/offered-courses",
+          method: "GET",
+        };
+      },
+      providesTags: [QueryTagTypes.OFFERED_COURSES],
+      transformResponse: (response: TResponseRedux<TOfferedCourse[]>) => {
+        const responseData = {
+          data: response.data,
+          meta: response.meta,
+        };
+        return responseData;
+      },
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
+    addOfferedCourse: builder.mutation({
+      query: (payload) => {
+        return {
+          url: "/offered-courses/create-offered-course",
+          method: "POST",
+          body: payload,
+        };
+      },
+      invalidatesTags: [QueryTagTypes.OFFERED_COURSES],
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
   }),
 });
 
@@ -146,4 +187,6 @@ export const {
   useGetAllCoursesQuery,
   useAddCourseMutation,
   useAssignFacultiesMutation,
+  useGetOfferedCoursesQuery,
+  useAddOfferedCourseMutation,
 } = courseManagementApi;
