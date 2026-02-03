@@ -3,9 +3,11 @@ import type React from "react";
 import { Controller } from "react-hook-form";
 type TProps = {
   name: string;
-  label?: string;
   options: TOption[];
+  label?: string;
+
   disabled?: boolean;
+  mode?: "multiple" | "tags";
 };
 
 type TOption = {
@@ -14,7 +16,13 @@ type TOption = {
   disabled?: boolean;
 };
 
-const PHSelect: React.FC<TProps> = ({ label, name, options, disabled }) => {
+const PHSelect: React.FC<TProps> = ({
+  label,
+  name,
+  options,
+  disabled,
+  mode,
+}) => {
   return (
     <Controller
       name={name}
@@ -26,6 +34,7 @@ const PHSelect: React.FC<TProps> = ({ label, name, options, disabled }) => {
             help={error ? error.message : null}
           >
             <Select
+              mode={mode}
               style={{ width: "100%" }}
               {...field}
               options={options}
