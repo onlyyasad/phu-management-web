@@ -1,5 +1,6 @@
 import { QueryTagTypes } from "../../../constants/global";
 import type { TCourse } from "../../../types/courses.types";
+import type { TFacultiesWithCourse } from "../../../types/facultiesWithCourse.types";
 import type {
   TError,
   TErrorResponseRedux,
@@ -137,6 +138,29 @@ const courseManagementApi = baseApi.injectEndpoints({
         return errorRes;
       },
     }),
+    getFacultiesWithCourse: builder.query({
+      query: (payload) => {
+        return {
+          url: `/courses/${payload.courseId}/get-faculties`,
+          method: "GET",
+        };
+      },
+      providesTags: [QueryTagTypes.OFFERED_COURSES],
+      transformResponse: (response: TResponseRedux<TFacultiesWithCourse>) => {
+        const responseData = {
+          data: response.data,
+          meta: response.meta,
+        };
+        return responseData;
+      },
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
     getOfferedCourses: builder.query({
       query: () => {
         return {
@@ -189,4 +213,5 @@ export const {
   useAssignFacultiesMutation,
   useGetOfferedCoursesQuery,
   useAddOfferedCourseMutation,
+  useGetFacultiesWithCourseQuery,
 } = courseManagementApi;
