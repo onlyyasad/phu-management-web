@@ -6,6 +6,8 @@ import Register from "../pages/Register/Register";
 import { routesGenerator } from "../utils/routesGenerators";
 import { facultyPaths } from "./faculty.routes";
 import { studentPaths } from "./student.routes";
+import ProtectedRoute from "../components/layout/ProtectedRoute";
+import { USER_ROLE } from "../constants/global";
 
 export const router = createBrowserRouter([
   {
@@ -14,17 +16,29 @@ export const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <App />,
+    element: (
+      <ProtectedRoute role={USER_ROLE.ADMIN}>
+        <App />
+      </ProtectedRoute>
+    ),
     children: routesGenerator(adminPaths),
   },
   {
     path: "/faculty",
-    element: <App />,
+    element: (
+      <ProtectedRoute role={USER_ROLE.FACULTY}>
+        <App />
+      </ProtectedRoute>
+    ),
     children: routesGenerator(facultyPaths),
   },
   {
     path: "/student",
-    element: <App />,
+    element: (
+      <ProtectedRoute role={USER_ROLE.STUDENT}>
+        <App />
+      </ProtectedRoute>
+    ),
     children: routesGenerator(studentPaths),
   },
   {

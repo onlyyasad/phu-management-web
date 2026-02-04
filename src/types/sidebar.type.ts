@@ -1,5 +1,5 @@
 export type TUserPaths = {
-  name: string;
+  name?: string;
   path?: string;
   element?: React.ReactNode;
   children?: TUserPaths[];
