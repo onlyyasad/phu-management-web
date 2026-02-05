@@ -6,7 +6,9 @@ import { facultyPaths } from "../../../routes/faculty.routes";
 import { studentPaths } from "../../../routes/student.routes";
 import type { TSidebarItem } from "../../../types/sidebar.type";
 import { useAppSelector } from "../../../redux/hooks";
-import { selectCurrentUser } from "../../../redux/features/auth/authSlice";
+import { selectCurrentToken } from "../../../redux/features/auth/authSlice";
+import type { TTokenUser } from "../../../types/global.types";
+import { verifyToken } from "../../../utils/verifyToken";
 
 const { Sider } = Layout;
 
@@ -20,7 +22,13 @@ const userRole = {
   STUDENT: "student",
 };
 const Sidebar: React.FC<TProps> = ({ collapsed }) => {
-  const user = useAppSelector(selectCurrentUser);
+  const token = useAppSelector(selectCurrentToken);
+
+  let user: TTokenUser | null = null;
+
+  if (token) {
+    user = verifyToken(token);
+  }
   const role = user?.role;
   let sidebarItems: TSidebarItem[] = [];
   switch (role) {

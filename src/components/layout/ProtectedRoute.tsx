@@ -2,10 +2,11 @@ import React from "react";
 import {
   logout,
   selectCurrentToken,
-  selectCurrentUser,
 } from "../../redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Navigate } from "react-router";
+import { verifyToken } from "../../utils/verifyToken";
+import type { TTokenUser } from "../../types/global.types";
 
 const ProtectedRoute = ({
   children,
@@ -15,7 +16,13 @@ const ProtectedRoute = ({
   role: string | undefined;
 }) => {
   const token = useAppSelector(selectCurrentToken);
-  const user = useAppSelector(selectCurrentUser);
+
+  let user: TTokenUser | null = null;
+
+  if (token) {
+    user = verifyToken(token);
+  }
+
   const dispatch = useAppDispatch();
 
   if (role && user?.role !== role) {

@@ -40,3 +40,10 @@ export type TQueryParam = {
   name: string;
   value: unknown;
 };
+
+export type TTokenUser = {
+  id: string;
+  role: "admin" | "faculty" | "student";
+  iat: number;
+  exp: number;
+};

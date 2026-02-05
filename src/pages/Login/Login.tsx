@@ -23,7 +23,12 @@ const Login = () => {
       const user = verifyToken(res.data.accessToken) as TUser;
       dispatch(setUser({ user, token: res.data.accessToken }));
       toast.success("Login successful!", { id: toastId, duration: 3000 });
-      navigate(`/${user.role.toLowerCase()}/dashboard`);
+
+      if (res?.data?.needsPasswordChange) {
+        navigate(`/change-password`);
+      } else {
+        navigate(`/${user.role.toLowerCase()}/dashboard`);
+      }
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed. Please check your credentials.", {
