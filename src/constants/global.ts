@@ -64,6 +64,7 @@ export const QueryTagTypes = {
   FACULTIES: "Faculties",
   OFFERED_COURSES: "OfferedCourses",
   MY_OFFERED_COURSES: "MyOfferedCourses",
+  MY_ENROLLED_COURSES: "MyEnrolledCourses",
 };
 
 export const USER_ROLE = {

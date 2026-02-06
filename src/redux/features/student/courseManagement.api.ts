@@ -4,6 +4,7 @@ import type {
   TErrorResponseRedux,
   TResponseRedux,
 } from "../../../types/global.types";
+import type { TMyEnrolledCourse } from "../../../types/myEnrolledCourse.types";
 import type { TMyOfferedCourse } from "../../../types/offeredCourse.types";
 import { baseApi } from "../../api/baseApi";
 
@@ -40,6 +41,37 @@ const studentCourseManagementApi = baseApi.injectEndpoints({
         return errorRes;
       },
     }),
+    getMyEnrolledCourses: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+        if (args?.length) {
+          args.forEach((item: Record<string, string>) => {
+            params.append(item.name, item.value);
+          });
+        }
+
+        return {
+          url: "/enrolled-courses/my-enrolled-courses",
+          method: "GET",
+          params,
+        };
+      },
+      providesTags: [QueryTagTypes.MY_ENROLLED_COURSES],
+      transformResponse: (response: TResponseRedux<TMyEnrolledCourse[]>) => {
+        const responseData = {
+          data: response.data,
+          meta: response.meta,
+        };
+        return responseData;
+      },
+      transformErrorResponse: (errorResponse: TErrorResponseRedux) => {
+        const errorRes: TError = {
+          success: errorResponse.data.success,
+          message: errorResponse.data.message,
+        };
+        return errorRes;
+      },
+    }),
     enrollInCourse: builder.mutation({
       query: (payload) => {
         return {
@@ -53,5 +85,8 @@ const studentCourseManagementApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetMyOfferedCoursesQuery, useEnrollInCourseMutation } =
-  studentCourseManagementApi;
+export const {
+  useGetMyOfferedCoursesQuery,
+  useEnrollInCourseMutation,
+  useGetMyEnrolledCoursesQuery,
+} = studentCourseManagementApi;
