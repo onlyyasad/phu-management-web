@@ -18,7 +18,7 @@ import PHTimePicker from "../../../components/form/PHTimePicker";
 
 const OfferCourse = () => {
   const [selectedCourse, setSelectedCourse] = useState<string>("");
-  const { data, isLoading: isCourseLoading } = useGetAllCoursesQuery(undefined);
+  const { data, isLoading: isCourseLoading } = useGetAllCoursesQuery([{name: "limit", value: 20}]);
 
   const {
     data: semesterRegistrationData,
