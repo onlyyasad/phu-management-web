@@ -1,6 +1,11 @@
 import moment from "moment";
 import { Card, Button, Row, Col, Typography, Space } from "antd";
-import { useGetMyOfferedCoursesQuery } from "../../redux/features/student/courseManagement.api";
+import {
+  useEnrollInCourseMutation,
+  useGetMyOfferedCoursesQuery,
+} from "../../redux/features/student/courseManagement.api";
+import { toast } from "sonner";
+import type { TError } from "../../types/global.types";
 
 type TModifiedData = {
   courseTitle: string;
@@ -24,6 +29,9 @@ const OfferedCourse = () => {
     error,
   } = useGetMyOfferedCoursesQuery(undefined);
 
+  const [enrollInCourse, { isLoading: isEnrolling }] =
+    useEnrollInCourseMutation();
+
   const singleObject = offeredCourses?.data?.reduce((acc, item) => {
     const key = item.course.title;
     acc[key] = acc[key] || { courseTitle: key, sections: [] };
@@ -39,24 +47,45 @@ const OfferedCourse = () => {
 
   const modifiedData = Object.values(singleObject || {});
 
-  const handleEnroll = (sectionId: string) => {
-    console.log("Enroll section", sectionId);
-    // TODO: call enroll API or open modal
+  const handleEnroll = async (sectionId: string) => {
+    const toastId = toast.loading("Enrolling in course...");
+    const payload = {
+      offeredCourse: sectionId,
+    }
+
+    try {
+      const res = await enrollInCourse(payload).unwrap();
+      if (res.success) {
+        toast.success("Successfully enrolled in course", { id: toastId });
+      }
+    } catch (error) {
+      const errResponse = error as TError;
+      toast.error(errResponse.message || "Failed to enroll in course", {
+        id: toastId,
+      });
+    }
   };
 
   if (isLoading) return <div>Loading offered courses...</div>;
-  if (isError) return <div>Error loading courses: {String(error ?? "Unknown error")}</div>;
+  if (isError)
+    return <div>Error loading courses: {String(error ?? "Unknown error")}</div>;
 
   return (
-    <Space direction="vertical" size="middle" style={{ display: "flex" }}>
-      {modifiedData.length === 0 && <Typography.Text>No offered courses found.</Typography.Text>}
+    <Space orientation="vertical" size="middle" style={{ display: "flex" }}>
+      {modifiedData.length === 0 && (
+        <Typography.Text>No offered courses found.</Typography.Text>
+      )}
 
       {modifiedData.map((course) => (
         <Card
           key={course.courseTitle}
-          title={<Typography.Title level={4} style={{ margin: 0 }}>{course.courseTitle}</Typography.Title>}
+          title={
+            <Typography.Title level={4} style={{ margin: 0 }}>
+              {course.courseTitle}
+            </Typography.Title>
+          }
         >
-          <Space direction="vertical" size="small" style={{ width: "100%" }}>
+          <Space orientation="vertical" size="small" style={{ width: "100%" }}>
             {course.sections.map((sec) => (
               <Row
                 key={sec._id}
@@ -65,21 +94,37 @@ const OfferedCourse = () => {
                 style={{ background: "#fafafa", padding: 12, borderRadius: 6 }}
               >
                 <Col flex="auto">
-                  <Typography.Text strong>Section {sec.section}</Typography.Text>
+                  <Typography.Text strong>
+                    Section {sec.section}
+                  </Typography.Text>
                   <div style={{ marginTop: 8 }}>
                     <Row gutter={24}>
                       <Col>
                         <Typography.Text type="secondary">Days</Typography.Text>
                         <div>
-                          <Typography.Text>{sec.days.join(", ")}</Typography.Text>
+                          <Typography.Text>
+                            {sec.days.join(", ")}
+                          </Typography.Text>
                         </div>
                       </Col>
 
                       <Col>
-                        <Typography.Text type="secondary">Class</Typography.Text>
+                        <Typography.Text type="secondary">
+                          Class
+                        </Typography.Text>
                         <div>
                           <Typography.Text>
-                            {moment(sec.startTime, ["HH:mm","HH:mm:ss","H:mm"]).format("h:mm A")} - {moment(sec.endTime, ["HH:mm","HH:mm:ss","H:mm"]).format("h:mm A")}
+                            {moment(sec.startTime, [
+                              "HH:mm",
+                              "HH:mm:ss",
+                              "H:mm",
+                            ]).format("h:mm A")}{" "}
+                            -{" "}
+                            {moment(sec.endTime, [
+                              "HH:mm",
+                              "HH:mm:ss",
+                              "H:mm",
+                            ]).format("h:mm A")}
                           </Typography.Text>
                         </div>
                       </Col>
@@ -88,7 +133,11 @@ const OfferedCourse = () => {
                 </Col>
 
                 <Col>
-                  <Button type="primary" onClick={() => handleEnroll(sec._id)}>
+                  <Button
+                    type="primary"
+                    onClick={() => handleEnroll(sec._id)}
+                    disabled={isEnrolling}
+                  >
                     Enroll
                   </Button>
                 </Col>
